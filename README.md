@@ -6,7 +6,7 @@
 3. 群聊  
 
 #依赖  
-需要php开启 socket 扩展，php 版本 大于 5.4, 浏览器 支持 websocket，localstorage  
+需要php开启 socket 扩展，php 版本 大于 5.4， 浏览器 支持 websocket，localstorage  
 
 #运行方法  
 1.在cmd下执行 index.php 文件  
