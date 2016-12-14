@@ -26,7 +26,7 @@ class SocketChat
     public function startServer()
     {
         $this->master = socket_create_listen( $this->port );
-        if( !$this->master ) throw new \ErrorException('listen $this->port fail !');
+        if( !$this->master ) throw new \Exception("listen {$this->port} fail !");
 
         $this->runLog("Server Started : ".date('Y-m-d H:i:s'));
         $this->runLog("Listening on   : 127.0.0.1 port " . $this->port);
