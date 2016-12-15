@@ -12,7 +12,7 @@ class SocketChat
     private $master = 1;  //主进程
     private $port = 2000;  //监听端口
     private static $connectPool = [];  //连接池
-    private static $maxConnetNum = 1024; //最大连接数
+    private static $maxConnectNum = 1024; //最大连接数
     private static $chatUser = [];  //参与聊天的用户
 
 
@@ -26,7 +26,7 @@ class SocketChat
     public function startServer()
     {
         $this->master = socket_create_listen( $this->port );
-        if( !$this->master ) throw new \Exception("listen {$this->port} fail !");
+        if( !$this->master ) throw new \ErrorException("listen {$this->port} fail !");
 
         $this->runLog("Server Started : ".date('Y-m-d H:i:s'));
         $this->runLog("Listening on   : 127.0.0.1 port " . $this->port);
@@ -47,11 +47,11 @@ class SocketChat
                     $this->handShake = False;
 
                     if ($client < 0){
-                        $this->log('clinet connet false!');
+                        $this->log('clinet connect false!');
                         continue;
                     } else{
                         //超过最大连接数
-                        if( count( self::$connectPool ) > self::$maxConnetNum )
+                        if( count( self::$connectPool ) > self::$maxConnectNum )
                             continue;
 
                         //加入连接池
