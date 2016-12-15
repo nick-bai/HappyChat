@@ -11,7 +11,7 @@ class SocketChat
     private $handShake = False; //默认未牵手
     private $master = 1;  //主进程
     private $port = 2000;  //监听端口
-    private static $connetPool = [];  //连接池
+    private static $connectPool = [];  //连接池
     private static $maxConnetNum = 1024; //最大连接数
     private static $chatUser = [];  //参与聊天的用户
 
@@ -30,12 +30,12 @@ class SocketChat
 
         $this->runLog("Server Started : ".date('Y-m-d H:i:s'));
         $this->runLog("Listening on   : 127.0.0.1 port " . $this->port);
-        $this->runLog("Master socket  : ".$this->master."\n");
+        $this->runLog("Master socket  : " . $this->master . " \n");
 
-        self::$connetPool[] = $this->master;
+        self::$connectPool[] = $this->master;
 
         while( true ){
-            $readFds = self::$connetPool;
+            $readFds = self::$connectPool;
             //阻塞接收客户端链接
             @socket_select( $readFds, $writeFds, $e = null, $this->timeout );
 
@@ -51,7 +51,7 @@ class SocketChat
                         continue;
                     } else{
                         //超过最大连接数
-                        if( count( self::$connetPool ) > self::$maxConnetNum )
+                        if( count( self::$connectPool ) > self::$maxConnetNum )
                             continue;
 
                         //加入连接池
@@ -163,7 +163,7 @@ class SocketChat
         $mess['user'] = self::$chatUser[(int) $client]['user'];
         $mess['stime'] = date('Y-m-d H:i:s');
 
-        foreach( self::$connetPool as $socket ){
+        foreach( self::$connectPool as $socket ){
             if( $socket != $this->master && $socket != $client  ){
                 $this->send( $socket, $mess );
             }
@@ -173,7 +173,7 @@ class SocketChat
     //广播客户端在线用户信息
     public function tellOnlineInfo( $mess )
     {
-        foreach( self::$connetPool as $socket ){
+        foreach( self::$connectPool as $socket ){
             if( $socket != $this->master ){
                 $this->send( $socket, $mess );
             }
@@ -264,7 +264,7 @@ class SocketChat
     //客户端链接处理函数
     function connect( $socket )
     {
-        array_push( self::$connetPool, $socket );
+        array_push( self::$connectPool, $socket );
         $this->runLog("\n" . $socket . " CONNECTED!");
         $this->runLog(date("Y-n-d H:i:s"));
     }
@@ -272,13 +272,13 @@ class SocketChat
     //客户端断开链接函数
     function disConnect( $socket )
     {
-        $index = array_search( $socket, self::$connetPool );
+        $index = array_search( $socket, self::$connectPool );
         socket_close( $socket );
 
         $this->unBind( $socket );
         $this->runLog( $socket . " DISCONNECTED!" );
         if ($index >= 0){
-            array_splice( self::$connetPool, $index, 1 );
+            array_splice( self::$connectPool, $index, 1 );
         }
     }
 
