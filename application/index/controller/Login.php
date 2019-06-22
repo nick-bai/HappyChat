@@ -35,7 +35,7 @@ class Login extends Controller
                 ->setId(uniqid(), true)
                 ->setIssuedAt($time)
                 ->setNotBefore($time)
-                ->setExpiration($time + 60)
+                ->setExpiration($time + 86400) // 24小时有效期
                 ->set('uid', uniqid())
                 ->set('name', $param['account'])
                 ->set('avatar', $avatar)

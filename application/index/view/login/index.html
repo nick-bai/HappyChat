@@ -84,7 +84,7 @@
 
                 $.post("{:url('login/doLogin')}", {account: account}, function (res) {
                     if (0 == res.code) {
-                       window.location.herf = "{:url('index/index')}";
+                       window.location.href = '/index/index';
                     } else {
                         alert(res.msg);
                     }
