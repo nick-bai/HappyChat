@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>happychat 登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+        .bg {
+            height:100%;
+            width:100%;
+            background-image: url("/static/images/back.jpg");
+            position: absolute
+        }
+        .login_box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -190px;
+            margin-top: -270px;
+            border-radius: 4px;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            background-color: #fff;
+            width: 380px;
+            height: 380px;
+            box-shadow: 0 2px 10px #999;
+            -moz-box-shadow: #999 0 2px 10px;
+            -webkit-box-shadow: #999 0 2px 10px;
+        }
+        .account {
+            width: 80%;
+            height: 50px;
+            font-size: 20px;
+            margin-top: 80px;
+            margin-left: 40px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        .login_btn {
+            width: 80%;
+            height: 50px;
+            font-size: 20px;
+            margin-top: 80px;
+            margin-left: 40px;
+            background: #01AAED;
+            border:none;
+            color: #f2f2f2;
+        }
+        .footer {
+            bottom: 0;
+            position: absolute;
+            height: 50px;
+            width: 100%;
+            text-align: center;
+            line-height: 50px;
+            color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg">
+        <div class="login_box">
+            <input type="text" name="account" placeholder="昵称" class="account"/>
+
+            <button class="login_btn">登 录</button>
+        </div>
+        <div class="footer">
+            © {:date('Y')} chat.baiyf.com. All Rights Reserved
+        </div>
+    </div>
+    <script src="/static/js/jquery.js"></script>
+    <script>
+        $(function () {
+
+            $(".login_btn").click(function () {
+                var account = $(".account").val();
+                if (account == '') {
+                    alert("请输入昵称");
+                    return false;
+                }
+
+                $.post("{:url('login/doLogin')}", {account: account}, function (res) {
+                    if (0 == res.code) {
+                       window.location.herf = "{:url('index/index')}";
+                    } else {
+                        alert(res.msg);
+                    }
+                }, 'json');
+            });
+        });
+    </script>
+</body>
+</html>

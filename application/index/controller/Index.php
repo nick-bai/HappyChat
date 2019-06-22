@@ -1,9 +1,14 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: NickBai
+ * Email: 876337011@qq.com
+ * Date: 2019/6/22
+ * Time: 8:18 AM
+ */
 namespace app\index\controller;
 
-use think\Controller;
-
-class Index extends Controller
+class Index extends Base
 {
     public function index()
     {
