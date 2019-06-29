@@ -83,6 +83,33 @@ $(function () {
             $("#sendBtn").addClass('active');
         }
     });
+
+    // 点击表情
+    var index;
+    $("#face").click(function (e) {
+        e.stopPropagation();
+        layui.use(['layer'], function () {
+            var layer = layui.layer;
+
+            var isShow = $(".layui-whisper-face").css('display');
+            if ('block' == isShow) {
+                layer.close(index);
+                return;
+            }
+            var height = $(".chat-body").height() - 110;
+            layer.ready(function () {
+                index = layer.open({
+                    type: 1,
+                    offset: [height + 'px', '240px'],
+                    shade: false,
+                    title: false,
+                    closeBtn: 0,
+                    area: '395px',
+                    content: showFaces()
+                });
+            });
+        });
+    });
 });
 
 // 监听快捷键发送
@@ -257,7 +284,7 @@ var getFacesIcon = function () {
 var faces = function () {
     var alt = getFacesIcon(), arr = {};
     $.each(alt, function (index, item) {
-        arr[item] = '/static/common/images/face/' + index + '.gif';
+        arr[item] = '/static/images/face/' + index + '.gif';
     });
     return arr;
 }();
@@ -267,12 +294,22 @@ var showFaces = function () {
     var alt = getFacesIcon();
     var _html = '<div class="layui-whisper-face"><ul class="layui-clear whisper-face-list">';
     $.each(alt, function (index, item) {
-        _html += '<li title="' + item + '" onclick="whisper.checkFace(this)"><img src="/static/common/images/face/' + index + '.gif" /></li>';
+        _html += '<li title="' + item + '" onclick="checkFace(this)"><img src="/static/images/face/' + index + '.gif" /></li>';
     });
     _html += '</ul></div>';
 
     return _html;
 };
+
+// 选择表情
+var checkFace = function (obj) {
+    var word = $("#textarea").val() + ' face' + $(obj).attr('title') + ' ';
+    $("#textarea").val(word).focus();
+
+    $(".layui-whisper-face").hide();
+    $(".send-input").addClass('active');
+};
+
 
 // 格式化时间
 Date.prototype.format = function(fmt) {
