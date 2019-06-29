@@ -20,7 +20,8 @@
         "topthink/framework": "5.1.*",
         "workerman/phpsocket.io": "^1.1",
         "lcobucci/jwt": "^3.3",
-        "zoujingli/ip2region": "^1.0"
+        "zoujingli/ip2region": "^1.0",
+        "topthink/think-migration": "2.0.*"
     },
     "autoload": {
         "psr-4": {

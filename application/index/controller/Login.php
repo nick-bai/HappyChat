@@ -15,6 +15,7 @@ class Login extends Controller
 {
     public function index()
     {
+        cache('user_list', null);
         return $this->fetch();
     }
 
@@ -42,20 +43,7 @@ class Login extends Controller
                 ->set('avatar', $avatar)
                 ->getToken();
 
-            $userList = json_decode(cache('user_list'), true);
-            if (empty($userList)) {
 
-                $userList = [];
-            }
-
-            $userList[$uid]= [
-                'uid' => $uid,
-                'name' => $param['account'],
-                'avatar' => $avatar,
-                'location' => getLocation(request()->ip()),
-            ];
-
-            cache('user_list', json_encode($userList));
 
             return json(['code' => 0, 'data' => base64_encode((string)$token), 'msg' => '登录成功']);
         }

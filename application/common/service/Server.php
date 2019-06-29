@@ -49,6 +49,7 @@ class Server
                 } catch (\Exception $e) {
                     if (is_callable($callback)) {
                         $callback(['code' => 400, 'data' => '', 'msg' => '登录过期了']);
+                        return false;
                     }
                 }
 
@@ -84,21 +85,11 @@ class Server
 
             $socket->on('disconnect', function () use($socket) {
 
-                if($socket->addedUser) {
-
-                    $socket->broadcast->emit('user left', [
-                        'uid' => $socket->uid,
-                        'name'=> $socket->username,
-                        'avatar' => $socket->avatar,
-                    ]);
-
-                    $userList = json_decode(cache('user_list'), true);
-                    if (isset($userList[$socket->uid])) {
-                        unset($userList[$socket->uid]);
-                    }
-
-                    cache('user_list', json_encode($userList));
-                }
+                $socket->broadcast->emit('user left', [
+                    'uid' => $socket->uid,
+                    'name'=> $socket->username,
+                    'avatar' => $socket->avatar,
+                ]);
             });
 
         });
