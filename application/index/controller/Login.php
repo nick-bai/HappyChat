@@ -15,7 +15,6 @@ class Login extends Controller
 {
     public function index()
     {
-        cache('user_list', null);
         return $this->fetch();
     }
 
@@ -24,9 +23,20 @@ class Login extends Controller
         if (request()->isPost()) {
 
             $param = input('post.');
+            $param['account'] = trim($param['account']);
 
             if (empty($param['account'])) {
                 return json(['code' => -1, 'data' => '', 'msg' => '请输入昵称']);
+            }
+
+            try {
+
+                $has = db('customers')->field('id')->where('name', $param['account'])->find();
+                if (!empty($has)) {
+                    return json(['code' => -2, 'data' => '', 'msg' => '该昵称已经存在']);
+                }
+            } catch (\Exception $e) {
+                $this->error($e->getMessage());
             }
 
             $uid = uniqid();

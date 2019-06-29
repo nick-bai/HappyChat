@@ -15,8 +15,6 @@ use Lcobucci\JWT\ValidationData;
 
 class Server
 {
-    private static $accountMap = [];
-
     public static function run()
     {
         $io = new SocketIO(2020);
@@ -46,6 +44,17 @@ class Server
                 try {
 
                     $token = (new Parser())->parse(base64_decode($data['token']));
+
+                    $has = db('customers')->field('id')->where('uid', $token->getClaim('uid'))->find();
+                    if (empty($has)) {
+                        db('customers')->insert([
+                            'uid' => $token->getClaim('uid'),
+                            'name' => $token->getClaim('name'),
+                            'avatar' => $token->getClaim('avatar'),
+                            'location' => getLocation(request()->ip())
+                        ]);
+                    }
+
                 } catch (\Exception $e) {
                     if (is_callable($callback)) {
                         $callback(['code' => 400, 'data' => '', 'msg' => '登录过期了']);
@@ -67,7 +76,7 @@ class Server
                 ]);
 
                 if (is_callable($callback)) {
-                    $callback(['code' => 0, 'data' => '', 'msg' => '登录成功']);
+                    $callback(['code' => 0, 'data' => db('customers')->select(), 'msg' => '登录成功']);
                 }
             });
 
@@ -85,11 +94,13 @@ class Server
 
             $socket->on('disconnect', function () use($socket) {
 
-                $socket->broadcast->emit('user left', [
-                    'uid' => $socket->uid
-                ]);
+                if ($socket->addedUser) {
+                    db('customers')->where('uid', $socket->uid)->delete();
 
-                db('customers')->where('uid', $socket->uid)->delete();
+                    $socket->broadcast->emit('user left', [
+                        'uid' => $socket->uid
+                    ]);
+                }
             });
 
         });

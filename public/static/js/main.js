@@ -1,11 +1,4 @@
-var layer = null;
-var laytpl = null;
 var customerPool = [];
-
-layui.use(['layer', 'laytpl'], function () {
-    layer = layui.layer;
-    laytpl = layui.laytpl;
-});
 
 var socket = io(window.location.host + ':2020?token=' + token);
 
@@ -22,11 +15,25 @@ socket.on('connect', function(){
     socket.emit("ADD_USER", JSON.stringify({token: token}), function (data) {
         if (400 == data.code) {
             window.location.href = '/index/login';
+        } else if(0 == data.code) {
+
+            if (data.data.length > 0) {
+                $.each(data.data, function (k, v) {
+                    showUserList(v);
+
+                    customerPool.push(v.uid);
+                });
+            }
         }
     });
 
     // 用户进入
     socket.on("user joined", function (data) {
+        console.log(customerPool);
+        if(-1 != $.inArray(data.uid, customerPool)) {
+            return false;
+        }
+
         customerPool.push(data.uid);
         showUserList(data);
     });
@@ -39,6 +46,12 @@ socket.on('connect', function(){
     // 断开连接
     socket.on("user left", function (data) {
         console.log(data);
+        $.each(customerPool, function (k, v) {
+            if(v == data.uid) {
+                customerPool.splice(k, 1);
+                $("#u-" + data.uid).remove();
+            }
+        });
     });
 });
 
@@ -53,6 +66,7 @@ $(function () {
         }
 
         sendMessage();
+        $("#sendBtn").removeClass('active');
     });
 
     // 输入监听
@@ -82,46 +96,61 @@ function wordBottom () {
 // 发送消息
 function sendMessage () {
 
-    var getTpl = mine.innerHTML
-        ,view = document.getElementById('chat-area');
+    layui.use(['laytpl'], function () {
 
-    laytpl(getTpl).render({
-        uid: uid,
-        name: name,
-        avatar: avatar,
-        time: new Date().format("yyyy-MM-dd hh:mm:ss"),
-        message: $("#textarea").val()
-    }, function(html){
-        view.innerHTML += html;
-        wordBottom();
-    });
+        var laytpl = layui.laytpl;
 
-    socket.emit("NEW_MESSAGE", JSON.stringify({content: $("#textarea").val()}), function (res) {
-        console.log(res);
-        $("#textarea").val('');
-    });
+        var getTpl = mine.innerHTML
+            ,view = document.getElementById('chat-area');
+
+        laytpl(getTpl).render({
+            uid: uid,
+            name: name,
+            avatar: avatar,
+            time: new Date().format("yyyy-MM-dd hh:mm:ss"),
+            message: $("#textarea").val()
+        }, function(html){
+            view.innerHTML += html;
+            wordBottom();
+        });
+
+        socket.emit("NEW_MESSAGE", JSON.stringify({content: $("#textarea").val()}), function (res) {
+            console.log(res);
+            $("#textarea").val('');
+        });
+    })
 }
 
 // 展示消息
 function showMessage (data) {
 
-    var getTpl = other.innerHTML
-        ,view = document.getElementById('chat-area');
+    layui.use(['laytpl'], function () {
 
-    laytpl(getTpl).render(data, function(html){
-        view.innerHTML += html;
-        wordBottom();
+        var laytpl = layui.laytpl;
+
+        var getTpl = other.innerHTML
+            ,view = document.getElementById('chat-area');
+
+        laytpl(getTpl).render(data, function(html){
+            view.innerHTML += html;
+            wordBottom();
+        });
     });
 }
 
 // 展示访客列表
 function showUserList (data) {
 
-    var getTpl = list.innerHTML
-        ,view = document.getElementById('visitor-list');
+    layui.use(['laytpl'], function () {
 
-    laytpl(getTpl).render(data, function(html){
-        view.innerHTML += html;
+        var laytpl = layui.laytpl;
+
+        var getTpl = list.innerHTML
+            ,view = document.getElementById('visitor-list');
+
+        laytpl(getTpl).render(data, function(html){
+            view.innerHTML += html;
+        });
     });
 }
 
