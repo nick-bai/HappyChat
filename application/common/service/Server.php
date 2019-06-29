@@ -86,10 +86,10 @@ class Server
             $socket->on('disconnect', function () use($socket) {
 
                 $socket->broadcast->emit('user left', [
-                    'uid' => $socket->uid,
-                    'name'=> $socket->username,
-                    'avatar' => $socket->avatar,
+                    'uid' => $socket->uid
                 ]);
+
+                db('customers')->where('uid', $socket->uid)->delete();
             });
 
         });

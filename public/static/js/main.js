@@ -1,5 +1,6 @@
 var layer = null;
 var laytpl = null;
+var customerPool = [];
 
 layui.use(['layer', 'laytpl'], function () {
     layer = layui.layer;
@@ -26,6 +27,7 @@ socket.on('connect', function(){
 
     // 用户进入
     socket.on("user joined", function (data) {
+        customerPool.push(data.uid);
         showUserList(data);
     });
 

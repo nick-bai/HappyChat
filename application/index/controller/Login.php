@@ -43,8 +43,6 @@ class Login extends Controller
                 ->set('avatar', $avatar)
                 ->getToken();
 
-
-
             return json(['code' => 0, 'data' => base64_encode((string)$token), 'msg' => '登录成功']);
         }
     }

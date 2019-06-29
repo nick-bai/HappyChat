@@ -32,7 +32,7 @@ class Customers extends Migrator
         $table->addColumn('uid', 'string', ['limit' => 32, 'default'=>'', 'comment' => '用户id'])
             ->addColumn('name', 'string', ['limit' => 55, 'default'=> '', 'comment' => '用户名'])
             ->addColumn('avatar', 'string', ['limit' => 32, 'default'=> '', 'comment' => '用户头像'])
-            ->addColumn('ip', 'string', ['limit' => 15, 'default' => '', 'comment' => '用户ip'])
+            ->addColumn('location', 'string', ['limit' => 55, 'default' => '', 'comment' => '用户地址'])
             ->addIndex(['uid'], ['unique' => true])
             ->create();
     }

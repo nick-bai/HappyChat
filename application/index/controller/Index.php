@@ -12,12 +12,28 @@ class Index extends Base
 {
     public function index($token)
     {
+        try {
+
+            $has = db('customers')->field('id')->where('uid', $this->token->getClaim('uid'))->find();
+            if (empty($has)) {
+                db('customers')->insert([
+                    'uid' => $this->token->getClaim('uid'),
+                    'name' => $this->token->getClaim('name'),
+                    'avatar' => $this->token->getClaim('avatar'),
+                    'location' => getLocation(request()->ip())
+                ]);
+            }
+        } catch (\Exception $e) {
+
+            $this->error($e->getMessage());
+        }
+
         $this->assign([
             'uid' => $this->token->getClaim('uid'),
             'name' => $this->token->getClaim('name'),
             'avatar' => $this->token->getClaim('avatar'),
             'token' => $token,
-            'online_user' => json_decode(cache('user_list'), true)
+            'online_user' => db('customers')->select()
         ]);
 
         return $this->fetch();
