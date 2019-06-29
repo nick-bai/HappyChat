@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>happy chat 聊天室</title>
+  <title>HappyChat 聊天室</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -41,7 +41,7 @@
           <div class="tool-box">
             <i class="layui-icon layui-icon-face-smile" id="face" title="表情"></i>
             <i class="layui-icon layui-icon-picture" id="image" title="图片"></i>
-            <i class="layui-icon" style="font-size: 20px;" id="file" title="文件">&#xe61d;</i>
+            <!--<i class="layui-icon" style="font-size: 20px;" id="file" title="文件">&#xe61d;</i>-->
           </div>
           <div class="send-btn-div">
             <input type="button" value="发送" class="send-input" id="sendBtn">
@@ -76,7 +76,7 @@
       <small>{{ d.name }}</small>
     </div>
     <div class="right">
-      <div class="chat-message">{{ d.message }}</div>
+      <div class="chat-message">{{ replaceContent(d.message) }}</div>
       <div class="chat-avatars">
         <img src="{{ d.avatar }}">
       </div>
@@ -96,7 +96,7 @@
       <div class="chat-avatars">
         <img src="{{ d.avatar }}">
       </div>
-      <div class="chat-message">{{ d.message }}</div>
+      <div class="chat-message">{{ replaceContent(d.message) }}</div>
     </div>
   </div>
   <div style="clear:both"></div>

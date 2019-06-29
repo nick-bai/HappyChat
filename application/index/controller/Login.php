@@ -36,7 +36,8 @@ class Login extends Controller
                     return json(['code' => -2, 'data' => '', 'msg' => '该昵称已经存在']);
                 }
             } catch (\Exception $e) {
-                $this->error($e->getMessage());
+
+                return json(['code' => -3, 'data' => $e->getMessage(), 'msg' => '系统错误']);
             }
 
             $uid = uniqid();
