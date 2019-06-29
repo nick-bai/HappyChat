@@ -29,9 +29,11 @@ class Index extends Base
         }
 
         $this->assign([
-            'uid' => $token->getClaim('uid'),
-            'name' => $token->getClaim('name'),
-            'avatar' => $token->getClaim('avatar')
+            'uid' => cookie('uid'),
+            'name' => cookie('name'),
+            'avatar' => cookie('avatar'),
+            'token' => $token,
+            'online_user' => json_decode(cache('user_list'), true)
         ]);
 
         return $this->fetch();

@@ -29,40 +29,10 @@
       <div class="layui-row chat-header" id="now-chat-box" style="text-align: center;line-height: 41px">
         <p style="color:#1E9FFF">欢迎大家访问 HappyChat 聊天室，文明交流，你我共勉。</p>
       </div>
-      <div class="layui-row chat-body" id="chat-area">
-
-        <div class="clearfloat">
-          <div class="author-mine-name">
-            <small class="chat-date">2019-01-02 12:56:51</small>
-            &nbsp;&nbsp;&nbsp;
-            <small>小王</small>
-          </div>
-          <div class="right">
-            <div class="chat-message">我就说个话，不装逼</div>
-            <div class="chat-avatars">
-              <img src="/static/images/1.png">
-            </div>
-          </div>
-        </div>
-        <div style="clear:both"></div>
-
-
-        <div class="clearfloat">
-          <div class="author-other-name">
-            <small>校长</small>
-            &nbsp;&nbsp;&nbsp;
-            <small class="chat-date">2019-01-02 12:56:51</small>
-          </div>
-          <div class="left">
-            <div class="chat-avatars">
-              <img src="/static/images/1.png">
-            </div>
-            <div class="chat-message">我就说个话，不装逼2222</div>
-          </div>
-        </div>
-        <div style="clear:both"></div>
-
+      <div class="layui-row chat-body">
+        <div class="chat-box" id="chat-area"></div>
       </div>
+
       <div class="layui-row chat-footer">
         <div class="text-holder">
           <textarea id="textarea" placeholder="请输入"></textarea>
@@ -83,7 +53,7 @@
   <div class="layui-col-xs2 service-bar">
     <div class="layui-tab" style="margin: 0">
       <ul class="layui-tab-title">
-        <li class="layui-this">我的信息</li>
+        <li class="layui-this">广告位</li>
       </ul>
       <div class="layui-tab-content">
         <div class="layui-tab-item layui-show">
@@ -93,12 +63,58 @@
     </div>
   </div>
 </div>
+
+<script id="mine" type="text/html">
+  <div class="clearfloat">
+    <div class="author-mine-name">
+      <small class="chat-date">{{ d.time }}</small>
+      &nbsp;&nbsp;&nbsp;
+      <small>{{ d.name }}</small>
+    </div>
+    <div class="right">
+      <div class="chat-message">{{ d.message }}</div>
+      <div class="chat-avatars">
+        <img src="{{ d.avatar }}">
+      </div>
+    </div>
+  </div>
+  <div style="clear:both"></div>
+</script>
+
+<script id="other" type="text/html">
+  <div class="clearfloat">
+    <div class="author-other-name">
+      <small>{{ d.name }}</small>
+      &nbsp;&nbsp;&nbsp;
+      <small class="chat-date">{{ d.time }}</small>
+    </div>
+    <div class="left">
+      <div class="chat-avatars">
+        <img src="{{ d.avatar }}">
+      </div>
+      <div class="chat-message">{{ d.message }}</div>
+    </div>
+  </div>
+  <div style="clear:both"></div>
+</script>
+
+<script id="list" type="text/html">
+  <div class="visitor-card" id="u-{{ d.uid }}" style="border-bottom: 1px solid #eeeeee">
+    <img src="{{ d.avatar }}" class="head-msg"/>
+    <div class="msg">
+      <p>
+        <span class="name">{{ d.name }}</span>
+        <span class="visitor-card-time">{{ d.time }}</span>
+      </p>
+    </div>
+  </div>
+</script>
+
 <script>
-  var uInfo = {
-      uid: "{$uid}",
-      name: "{$name}",
-      avatar: "{$avatar}"
-  };
+  var uid = '{$uid}';
+  var name = '{$name}';
+  var avatar = '{$avatar}';
+  var token = '{$token}';
 </script>
 <!-- 转接提示层 -->
 <script src="/static/js/layui/layui.js"></script>
