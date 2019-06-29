@@ -36,18 +36,28 @@ class Login extends Controller
                 ->setId(uniqid(), true)
                 ->setIssuedAt($time)
                 ->setNotBefore($time)
-                ->setExpiration($time + 86400 * 7) // 7天有效期
+                ->setExpiration($time + 86400) // 1天有效期
                 ->set('uid', $uid)
                 ->set('name', $param['account'])
                 ->set('avatar', $avatar)
                 ->getToken();
 
-            cookie('token', $token, 86400 * 7);
-            cookie('uid', $uid, 86400 * 7);
-            cookie('name', $param['account'], 86400 * 7);
-            cookie('avatar', $avatar, 86400 * 7);
+            $userList = json_decode(cache('user_list'), true);
+            if (empty($userList)) {
 
-            return json(['code' => 0, 'data' => $token, 'msg' => 'success']);
+                $userList = [];
+            }
+
+            $userList[$uid]= [
+                'uid' => $uid,
+                'name' => $param['account'],
+                'avatar' => $avatar,
+                'location' => getLocation(request()->ip()),
+            ];
+
+            cache('user_list', json_encode($userList));
+
+            return json(['code' => 0, 'data' => base64_encode((string)$token), 'msg' => '登录成功']);
         }
     }
 }

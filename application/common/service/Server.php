@@ -22,8 +22,6 @@ class Server
         $io = new SocketIO(2020);
         $io->on('connection', function($socket) {
 
-            self::auth($socket);
-
             $socket->addedUser = false;
 
             $socket->on('NEW_MESSAGE', function($data, $callback) use($socket) {
@@ -45,7 +43,14 @@ class Server
             $socket->on('ADD_USER', function($data, $callback) use($socket) {
                 $data = json_decode($data, true);
 
-                $token = (new Parser())->parse($data['token']);
+                try {
+
+                    $token = (new Parser())->parse(base64_decode($data['token']));
+                } catch (\Exception $e) {
+                    if (is_callable($callback)) {
+                        $callback(['code' => 400, 'data' => '', 'msg' => '登录过期了']);
+                    }
+                }
 
                 $socket->uid = $token->getClaim('uid');
                 $socket->username = $token->getClaim('name');
@@ -57,7 +62,7 @@ class Server
                     'uid' => $socket->uid,
                     'name'=> $socket->username,
                     'avatar' => $socket->avatar,
-                    'time' => date('Y-m-d H:i:s')
+                    'location' => getLocation(request()->ip()),
                 ]);
 
                 if (is_callable($callback)) {
@@ -86,6 +91,13 @@ class Server
                         'name'=> $socket->username,
                         'avatar' => $socket->avatar,
                     ]);
+
+                    $userList = json_decode(cache('user_list'), true);
+                    if (isset($userList[$socket->uid])) {
+                        unset($userList[$socket->uid]);
+                    }
+
+                    cache('user_list', json_encode($userList));
                 }
             });
 
@@ -94,22 +106,6 @@ class Server
         self::showLogo();
 
         Worker::runAll();
-    }
-
-    private static function auth($socket)
-    {
-        $token = $socket->request->_query['token'];
-        $token = (new Parser())->parse($token);
-
-        $validate = new ValidationData();
-
-        $validate->setIssuer($token->getClaim('iss'));
-        $validate->setAudience($token->getClaim('aud'));
-        $validate->setId($token->getClaim('jti'));
-
-        if(!$token->validate($validate)) {
-            $socket->disconnect();
-        }
     }
 
     private static function showLogo()

@@ -10,3 +10,20 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
+
+function getLocation ($ip) {
+
+    $ip2region = new \Ip2Region();
+    $info = $ip2region->btreeSearch($ip);
+
+    $info = explode('|', $info['region']);
+
+    $address = '';
+    foreach($info as $vo) {
+        if('0' !== $vo) {
+            $address .= $vo . '-';
+        }
+    }
+
+    return $address;
+}

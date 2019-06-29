@@ -8,30 +8,14 @@
  */
 namespace app\index\controller;
 
-use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\ValidationData;
-
 class Index extends Base
 {
-    public function index()
+    public function index($token)
     {
-        $token = cookie('token');
-        $token = (new Parser())->parse($token);
-
-        $validate = new ValidationData();
-
-        $validate->setIssuer($token->getClaim('iss'));
-        $validate->setAudience($token->getClaim('aud'));
-        $validate->setId($token->getClaim('jti'));
-
-        if(!$token->validate($validate)) {
-            $this->redirect(url('login/index'));
-        }
-
         $this->assign([
-            'uid' => cookie('uid'),
-            'name' => cookie('name'),
-            'avatar' => cookie('avatar'),
+            'uid' => $this->token->getClaim('uid'),
+            'name' => $this->token->getClaim('name'),
+            'avatar' => $this->token->getClaim('avatar'),
             'token' => $token,
             'online_user' => json_decode(cache('user_list'), true)
         ]);

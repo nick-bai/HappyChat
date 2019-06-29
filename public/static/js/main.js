@@ -19,7 +19,12 @@ socket.on('connect', function(){
 
     // 进入聊天室
     socket.emit("ADD_USER", JSON.stringify({token: token}), function (data) {
-        console.log(data);
+
+        var data = JSON.parse(data);
+
+        if (400 == data.code) {
+            window.location.href = '/index/login';
+        }
     });
 
     // 用户进入
