@@ -41,7 +41,7 @@ class Login extends Controller
             }
 
             $uid = uniqid();
-            $avatar = '/static/images/avatar/' . mt_rand(1, 14) . '.png';
+            $avatar = '/static/images/avatar/' . mt_rand(1, 13) . '.png';
             $time = time();
             $token = (new Builder())->setIssuer('http://baiyf.com')
                 ->setAudience('http://chat.baiyf.com')
