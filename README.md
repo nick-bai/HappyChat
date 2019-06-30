@@ -3,28 +3,28 @@
 happychat 全新大升级，旧版本请到 release 中下载。
 
 ## 如何使用
-1、推荐配置
+### 1、推荐配置
 
 php  7.0+  
 mysql 5.6+  
 nginx 1.4+  
 操作系统 linux or macos
 
-2、相关的扩展  
+### 2、相关的扩展  
 
 1、pcntl (linux下开进程用)   
 2、event (增强性能用)  
 
 >其余php常见的扩展 mysql pdo 之类的就不列举了  
 
-3、获取源码  
+### 3、获取源码  
 ```php
 git clone https://github.com/nick-bai/HappyChat.git
 cd HappyChat
 composer update
 ```
 
-4、搭建 thinkphp 5.1 项目  
+### 4、搭建 thinkphp 5.1 项目  
 > 这个教程有很多，可以参考我的 教程 http://doc.baiyf.com/988777 
 
 特别强调2点！   
@@ -39,7 +39,7 @@ composer update
  }
 ```  
 
-5、配置数据库  
+### 5、配置数据库  
 本地新建数据库： happy_chat 编码为 utf8  
 配置 config/database.php  
 ```php
@@ -58,7 +58,7 @@ php think migrate:run
 ```
 数据库中就会导入 customers 表  
 
-6、启动socket.io server  
+### 6、启动socket.io server  
 进入项目根目录，执行
 ```php
 php think chat start
@@ -67,7 +67,7 @@ debug 运行服务，会看到如下的画面
 
 ![启动](screenshoot/start.png) 
 
-7、访问聊天室项目，即可。 
+### 7、访问聊天室项目，即可。 
 ![启动](screenshoot/login.png)   
 
 ![启动](screenshoot/chat.png) 
