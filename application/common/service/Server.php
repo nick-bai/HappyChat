@@ -51,13 +51,20 @@ class Server
                     return false;
                 }
 
+                $ip = $socket->conn->remoteAddress;
+                if (!empty($ip)) {
+                    $ip = explode(":", $ip)[0];
+                }
+
+                $location = getLocation($ip);
+
                 $has = db('customers')->field('id')->where('uid', $token->getClaim('uid'))->find();
                 if (empty($has)) {
                     db('customers')->insert([
                         'uid' => $token->getClaim('uid'),
                         'name' => $token->getClaim('name'),
                         'avatar' => $token->getClaim('avatar'),
-                        'location' => getLocation(request()->ip())
+                        'location' => $location
                     ]);
                 }
 
@@ -71,7 +78,7 @@ class Server
                     'uid' => $socket->uid,
                     'name'=> $socket->username,
                     'avatar' => $socket->avatar,
-                    'location' => getLocation(request()->ip()),
+                    'location' => $location,
                 ]);
 
                 if (is_callable($callback)) {
