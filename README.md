@@ -2,6 +2,9 @@
 
 happychat 全新大升级，旧版本请到 release 中下载。
 
+## 体验地址  
+http://hpchat.baiyf.com  
+
 ## 如何使用
 ### 1、推荐配置
 
