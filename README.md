@@ -68,7 +68,16 @@ php think chat start
 ```
 debug 运行服务，会看到如下的画面  
 
-![启动](screenshoot/start.png) 
+![启动](screenshoot/start.png)   
+
+>注意事项： 默认的socket.io 的端口是 2020，记得把 2020 加入防火墙以及安全组（如果是阿里云等云服务器的话）
+
+相关命令:  
+php think chat start  // debug运行  
+php think chat start -d // 守护运行  
+php think chat restart -d // 重启守护运行  
+php think chat stop  // 停止运行  
+php think chat status  // 查看运行状态    
 
 ### 7、访问聊天室项目，即可。 
 ![启动](screenshoot/login.png)   
