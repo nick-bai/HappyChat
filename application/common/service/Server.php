@@ -41,25 +41,24 @@ class Server
             $socket->on('ADD_USER', function($data, $callback) use($socket) {
                 $data = json_decode($data, true);
 
-                try {
+                $token = (new Parser())->parse(base64_decode($data['token']));
 
-                    $token = (new Parser())->parse(base64_decode($data['token']));
-
-                    $has = db('customers')->field('id')->where('uid', $token->getClaim('uid'))->find();
-                    if (empty($has)) {
-                        db('customers')->insert([
-                            'uid' => $token->getClaim('uid'),
-                            'name' => $token->getClaim('name'),
-                            'avatar' => $token->getClaim('avatar'),
-                            'location' => getLocation(request()->ip())
-                        ]);
-                    }
-
-                } catch (\Exception $e) {
+                if (empty($token->getClaim('uid'))) {
                     if (is_callable($callback)) {
-                        $callback(['code' => 400, 'data' => '', 'msg' => '登录过期了']);
-                        return false;
+                        $callback(['code' => 400, 'data' => '', 'msg' => '登录过期']);
                     }
+
+                    return false;
+                }
+
+                $has = db('customers')->field('id')->where('uid', $token->getClaim('uid'))->find();
+                if (empty($has)) {
+                    db('customers')->insert([
+                        'uid' => $token->getClaim('uid'),
+                        'name' => $token->getClaim('name'),
+                        'avatar' => $token->getClaim('avatar'),
+                        'location' => getLocation(request()->ip())
+                    ]);
                 }
 
                 $socket->uid = $token->getClaim('uid');
